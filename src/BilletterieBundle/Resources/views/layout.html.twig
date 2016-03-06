@@ -1,0 +1,44 @@
+{# src/BilletterieBundle/Resources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Musée du Louvres{% endblock %}</title>
+
+  {% block stylesheets %}
+    {# On charge le CSS de bootstrap depuis le site directement #}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    {# les CSS de la billetterie #}
+    <link href="{{ asset('bundles/billetterie/css/styles.css') }}" rel="stylesheet" type="text/css" />
+  {% endblock %}
+</head>
+
+<body>
+  <div class="container">
+    <div id="header" class="jumbotron">
+      <h1>Musée du Louvres</h1>
+      <p>
+        Commandez vos billets à l'avance en quelques clics pour éviter les longues files d'attente.
+      </p>
+    </div>
+
+    {% block body %}
+    {% endblock %}
+
+    <footer>
+      <p>&copy; Musée du Louvres {{ 'now'|date('Y') }}</p>
+    </footer>
+  </div>
+
+  {% block javascripts %}
+    {# Fonctionnalités Bootstrap Twitter #}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+  {% endblock %}
+
+</body>
+</html>
