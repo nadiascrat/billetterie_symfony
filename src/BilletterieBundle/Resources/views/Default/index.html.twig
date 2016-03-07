@@ -8,45 +8,76 @@
 
 {% block body %}
   <div class="row" >
-    <div class="col-md-offset-2 col-md-8" id="reservation" >
-      <h2>Choix de la date</h2>
-      <div class="col-md-offset-2 col-md-4" >
-        <div id="datepicker" ></div>
+    <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
+      <div class="text-center col-sm-6" >
+        <h2>Choix de la date</h2>
+        <div class="text-center" id="datepicker" ></div>
       </div>
-      <div class="col-md-4" >
-        Nb de tickets
+      <div class="col-sm-6" >
+        <h2>Nombre de billets</h2>
+        <div class="form-group col-xs-offset-4 col-xs-4" >
+          <select class="form-control input-lg" id="nb_tickets">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+          </select>
+          <br />
+        </div>
+        <div class="btn-group-vertical" data-toggle="buttons" id="journee_demi_journee" >
+    	    <button class="btn btn-success" ><input type="radio" name="type_billet" checked="checked" >Billets Journée</button>
+          <button class="btn" ><input type="radio" name="type_billet" >Billets Demi-journée (dès 14h)</button>
+        </div>
+        <div class="form-group col-xs-12" >
+          <br />
+          <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
+        </div>
       </div>
     </div>
-  </div>
+
 {% endblock %}
 
-{% block javascripts %}  
+{% block javascripts %}
+  {{ parent() }}
+  
   <script>
-    $(document).ready(function() {
-      $('#datepicker').datepicker({
+      var jours_complets = ["2016-03-14","2016-03-15","2016-03-16"];
+      var jours_presque_complets = ["2016-03-17","2016-03-18"];
+      
+      $(function() {
+        $( "#datepicker" ).datepicker({
           format: "yyyy-mm-dd",
-          weekStart: 1,
-          startDate: "today",
+          firstDay: 1,
           maxViewMode: 0,
           language: "fr",
-          daysOfWeekDisabled: "0",
-          beforeShowDay: function (date){
-                        if (date.getMonth() == (new Date()).getMonth())
-                          switch (date.getDate()){
-                            case 4:
-                              return {
-                                tooltip: 'Example tooltip',
-                                classes: 'active'
-                              };
-                            case 8:
-                              return false;
-                            case 12:
-                              return "green";
-                        }
-                      },
-          datesDisabled: ['03/06/2016', '03/21/2016']
+          minDate: 0,
+          maxDate: "+6M",
+          beforeShowDay: function(date){
+              // on teste plusieurs cas de figure : dès qu'un cas spécial est détecté, on renvoie une réponse
+              // non réservable si c'est un dimanche
+              var day = date.getDay();
+              if(day == 0) { return [false, '']; }
+              // non réservable si c'est un jour complet
+              var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+              if(jours_complets.indexOf(string) != -1) { return [false, 'complet']; }
+              // réservable mais code couleur si c'est presque complet
+              if(jours_presque_complets.indexOf(string) != -1) { return [true, 'presque_complet']; }
+              // sinon, RAS
+              return [true, ''];                         
+          }
         });
+        
+        $("#journee_demi_journee > .btn").click(function(){
+            $(this).addClass("btn-success").siblings().removeClass("btn-success");
+        });
+        
+        
       });
-          alert('coucou');
-    </script>
+  </script>
+        
+  
 {% endblock %}
