@@ -3,7 +3,7 @@
 {% extends "BilletterieBundle::layout.html.twig" %}
 
 {% block title %}
-  Billeterie - {{ parent() }}
+  Billetterie - {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -15,27 +15,31 @@
       </div>
       <div class="col-sm-6" >
         <h2>Nombre de billets</h2>
-        <div class="form-group col-xs-offset-4 col-xs-4" >
-          <select class="form-control input-lg" id="nb_tickets">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-          </select>
-          <br />
-        </div>
-        <div class="btn-group-vertical" data-toggle="buttons" id="journee_demi_journee" >
-    	    <button class="btn btn-success" ><input type="radio" name="type_billet" checked="checked" >Billets Journée</button>
-          <button class="btn" ><input type="radio" name="type_billet" >Billets Demi-journée (dès 14h)</button>
-        </div>
-        <div class="form-group col-xs-12" >
-          <br />
-          <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
-        </div>
+        <form name="form" method="post">
+          <input type="text" id="form_journeeEntiere" name="form[journeeEntiere]" required="required" value="{{ commande.journeeEntiere }}" />
+          <div class="form-group col-xs-offset-4 col-xs-4" >
+            <select class="form-control input-lg" id="nb_tickets">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+            </select>
+            <br />
+          </div>
+          <div class="btn-group-vertical" data-toggle="buttons" id="journee_demi_journee" >
+      	    <button class="btn btn-success" ><input type="radio" name="type_billet" checked="checked" >Billets Journée</button>
+            <button class="btn" ><input type="radio" name="type_billet" >Billets Demi-journée (dès 14h)</button>
+          </div>
+          <div class="form-group col-xs-12" >
+            <br />
+            <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
+          </div>
+        </form>
+        {{ form(formCommande) }}
       </div>
     </div>
 
@@ -56,6 +60,12 @@
           language: "fr",
           minDate: 0,
           maxDate: "+6M",
+          onSelect: function(dateText) {
+              $tab_jour = dateText.split('/');
+              $('#form_dateVisite_day').val(parseInt($tab_jour[0]));
+              $('#form_dateVisite_month').val(parseInt($tab_jour[1]));
+              $('#form_dateVisite_year').val($tab_jour[2]);
+          },
           beforeShowDay: function(date){
               // on teste plusieurs cas de figure : dès qu'un cas spécial est détecté, on renvoie une réponse
               // non réservable si c'est un dimanche

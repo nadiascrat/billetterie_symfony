@@ -1,3 +1,7 @@
 billetterie_homepage:
     path:     /
     defaults: { _controller: BilletterieBundle:Default:index }
+    
+billetterie_billets:
+    path:     /billets
+    defaults: { _controller: BilletterieBundle:Default:billets }

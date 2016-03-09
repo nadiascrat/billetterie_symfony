@@ -1,0 +1,18 @@
+{# src/BilletterieBundle/Resources/views/Default/billets.html.twig #}
+
+{% extends "BilletterieBundle::layout.html.twig" %}
+
+{% block title %}
+  Billetterie - bénéficiaires - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <div class="row" >
+    <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
+      <h2>Bénéficiaires des billets</h2>
+      {{ nbBillets }} billets voulus
+    </div>  
+  </div>
+
+{% endblock %}
+
