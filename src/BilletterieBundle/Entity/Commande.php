@@ -2,9 +2,10 @@
 
 namespace BilletterieBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Commande
@@ -23,31 +24,20 @@ class Commande
      */
     private $id;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_commande", type="integer", unique=true)
-     */
-    private $idCommande;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="nb_billets", type="integer")
-     */
-    private $nbBillets;
     
     /**
      * @var \Datetime
      *
      * @ORM\Column(name="date_visite", type="date")
+     * @Assert\DateTime()     
      */
     private $dateVisite;
 
     /**
-     * @var int
+     * @var boolean
      *
      * @ORM\Column(name="journee_entiere", type="boolean", nullable=true)
+     * @Assert\NotBlank()     
      */
     private $journeeEntiere;
         
@@ -59,12 +49,40 @@ class Commande
     private $ipClient;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="BilletterieBundle\Entity\Billet", cascade={"persist"})
+     */
+    protected $billets;
+  
+  
     public function __construct()
     {
+      $this->ipClient = $_SERVER['REMOTE_ADDR']; 
       $this->dateVisite   = new \Datetime(); /* date du jour par défaut */
       $this->journeeEntiere   = true; /* billet journée par défaut */
-      $this->beneficiaires = new ArrayCollection();
+      $this->billets = new ArrayCollection();
     }
+
+    // Notez le singulier, on ajoute un seul billet à la fois
+    public function addBillet(Billet $billet)
+    {
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->billets[] = $billet;  
+      return $this;
+    }
+  
+    public function removeBillet(Billet $billet)
+    {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer le billet en argument
+      $this->billets->removeElement($billet);
+    }
+  
+    // Notez le pluriel, on récupère une liste de billets ici !
+    public function getBillets()
+    {
+      return $this->billets;
+    }
+
   
     /**
      * Get id
@@ -98,17 +116,6 @@ class Commande
     public function getIdCommande()
     {
         return $this->idCommande;
-    }
-
-    public function setNbBillets($nbBillets)
-    {
-        $this->nbBillets = $nbBillets;
-
-        return $this;
-    }    
-    public function getNbBillets()
-    {
-        return $this->nbBillets;
     }
 
     /**
@@ -187,5 +194,7 @@ class Commande
     {
       return 'billetterie_bundle_commandetype';
     }
+    
+
 }
 

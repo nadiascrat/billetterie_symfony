@@ -1,18 +1,83 @@
-{# src/BilletterieBundle/Resources/views/Default/billets.html.twig #}
+{# src/BilletterieBundle/Resources/views/Default/index.html.twig #}
 
 {% extends "BilletterieBundle::layout.html.twig" %}
 
 {% block title %}
-  Billetterie - bénéficiaires - {{ parent() }}
+  Billets - liste des bénéficiaires - {{ parent() }}
 {% endblock %}
 
 {% block body %}
   <div class="row" >
     <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
-      <h2>Bénéficiaires des billets</h2>
-      {{ nbBillets }} billets voulus
-    </div>  
+      <div class="text-center col-sm-12" >
+        <h2>Bénéficiaires des tickets</h2>
+          <p>Veuillez préciser l'identité des participants à la visite prévue le {{ commande.dateVisite|date('d/m/Y') }}.
+          {{ form_start(form) }}
+            <div id="billets" class="billets" data-prototype="{{ form_widget(form.billets.vars.prototype)|e }}" >
+              {% for billet in form.billets %}
+                <div class="billet col-sm-12">
+                  {{ form_row(billet) }}
+                </div>    
+              {% endfor %}
+            </div>
+            <div class="text-left col-sm-12">
+              {# ajout manuel du bouton pour ajouter un nouveau billet #}
+              <a class="btn btn-primary" href="#" id="btn_ajouter_billet" ><i class="fa fa-plus" ></i> Ajouter un billet</a>
+            </div>
+            {# ajout manuel du bouton pour valider le formulaire #}              
+            <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
+          </form>
+      </div>
+    </div>
   </div>
 
 {% endblock %}
 
+{% block javascripts %}
+  {{ parent() }}
+
+  <script>  
+    var $collectionHolder;
+      
+    jQuery(document).ready(function() {
+        // Localise le DIV qui contient les billets
+        $collectionHolder = $('#billets');
+    
+        // compte le nombre de billets déjà présents
+        $collectionHolder.data('index', $collectionHolder.find('.billet').length);
+        
+        // si aucun billet n'existe encore, on en crée un par défaut
+        if($collectionHolder.data('index')===0) {
+          addBilletForm($collectionHolder, $collectionHolder);   
+        }
+        
+        $('#btn_ajouter_billet').on('click', function(e) {
+            // empêche de recharger la page
+            e.preventDefault();
+            // ajoute un nouveau billet
+            addBilletForm($collectionHolder, $collectionHolder);            
+        });
+        
+        function addBilletForm($collectionHolder, $newLinkLi) {
+            // récupère le prototype généré par Symfony
+            var prototype = $collectionHolder.data('prototype');
+        
+            // récupère l'index en cours
+            var index = $collectionHolder.data('index');
+        
+            // Remplace les '__name__' du prototype par l'index courant
+            var newForm = prototype.replace(/__name__/g, index);
+        
+            // incrémente l'index pour le prochain ajout
+            $collectionHolder.data('index', index + 1);
+        
+            // ajoute le formulaire dans un nouveau div de class "billet"
+            var numBillet = index + 1;
+            var $newFormBillet = $('<div class="billet col-sm-12"><h3>Billet n°'+numBillet+'</h3></div>').append(newForm);
+            $collectionHolder.append($newFormBillet);
+        }  
+    });
+  </script>
+  
+  
+{% endblock %}
