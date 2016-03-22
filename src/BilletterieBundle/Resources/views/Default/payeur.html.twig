@@ -1,0 +1,24 @@
+{# src/BilletterieBundle/Resources/views/Default/index.html.twig #}
+
+{% extends "BilletterieBundle::layout.html.twig" %}
+
+{% block title %}
+  Coordonnées du payeur - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <div class="row" >
+    <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
+      <div class="text-center col-sm-12" >
+        <h2>Coordonnées du payeur</h2>
+        <p>Veuillez préciser la personne qui va régler la commande pour la visite prévue le {{ commande.dateVisite|date('d/m/Y') }}.
+        {{ form(form) }}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

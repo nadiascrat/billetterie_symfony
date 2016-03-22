@@ -44,12 +44,22 @@ class DefaultController extends Controller
       // À partir du formBuilder, on génère le formulaire
       $form = $formBuilder->getForm();
       
-      $form->handleRequest($request);
+      $form->handleRequest($request);       
+
+      // par défaut, on envoie sur la page d'accueil
+      return $this->render('BilletterieBundle:Default:index.html.twig', [
+          'commande' => $commande,
+          'formCommande' => $form->createView(),
+          ]);   
+    }
+
+    public function indexPostAction(Request $request)
+    {
+      // On crée un objet Commande
+      $commande = new Commande();
       
       // si on reçoit des infos en POST, c'est qu'un internaute veut passer commande
-      if($request->isMethod('POST') && $form->isValid()) {
-  
-        //$formBuilder->bindRequest($request) ;
+      if($request->isMethod('POST')) {
         
         // On récupère le service validator
         $validator = $this->get('validator');
@@ -70,15 +80,9 @@ class DefaultController extends Controller
           return $this->redirect($this->generateUrl('billetterie_billets'));
           
         }                    
-      }       
-
-      // par défaut, on envoie sur la page d'accueil
-      return $this->render('BilletterieBundle:Default:index.html.twig', [
-          'commande' => $commande,
-          'formCommande' => $form->createView(),
-          ]);   
+      }          
     }
-    
+       
     public function billetsAction(Request $request)
     {
       $commande = new Commande();
@@ -95,10 +99,10 @@ class DefaultController extends Controller
         ->getQuery()
         ->getOneOrNullResult();
         
-      // On vérifie que l'annonce existe bien
+      // On vérifie que la commande existe bien
       if ($commande === null) {
         throw $this->createNotFoundException("Pas de commande en cours.");
-        // on pourrait rediriger automatiquement vers l'accueil
+        // on pourrait aussi rediriger automatiquement vers l'accueil
       }
 
  
@@ -121,4 +125,78 @@ class DefaultController extends Controller
           'form' => $form->createView(),
           ]); 
     }
+    
+    public function billetsPostAction(Request $request)
+    {
+      // On crée un objet Commande
+      $commande = new Commande();
+      
+      // si on reçoit des infos en POST, c'est qu'un internaute a ajouté des billets
+      if($request->isMethod('POST')) {
+        
+        // On récupère le service validator
+        $validator = $this->get('validator');
+        
+        // On déclenche la validation sur notre object
+        $listErrors = $validator->validate($commande);
+    
+        // Si le tableau n'est pas vide, on affiche les erreurs
+        if(count($listErrors) > 0) {
+          return new Response(print_r($listErrors, true));
+        } else {
+          // on persiste
+          $em = $this->getDoctrine()->getManager();   
+          $em->persist($commande);   
+          $em->flush();   
+              
+          // on redirige vers la page de configuration des billets
+          return $this->redirect($this->generateUrl('billetterie_payeur'));
+          
+        }                    
+      }          
+    }
+    
+    public function payeurAction(Request $request)
+    {
+      $commande = new Commande();
+      
+      // On récupère l'EntityManager
+      $em = $this->getDoctrine()->getManager();
+  
+      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
+      $commande = $em->createQueryBuilder()
+        ->select('e')
+        ->from('BilletterieBundle:Commande', 'e')
+        ->orderBy('e.id', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+        
+      // On vérifie que la commande existe bien
+      if ($commande === null) {
+        throw $this->createNotFoundException("Pas de commande en cours.");
+        // on pourrait aussi rediriger automatiquement vers l'accueil
+      }
+
+ 
+          
+      // On crée le FormBuilder grâce au service form factory
+      $formBuilder = $this->createFormBuilder($commande)
+           ->add('billets', CollectionType::class, [
+              'entry_type' => BilletType::class,
+              'allow_add'    => true,
+              'allow_delete' => true,
+            ])
+      ;    
+      
+      // À partir du formBuilder, on génère le formulaire
+      $form = $formBuilder->getForm();
+      
+      // par défaut, on envoie sur la page des billets
+      return $this->render('BilletterieBundle:Default:payeur.html.twig', [
+          'commande' => $commande,
+          'form' => $form->createView(),
+          ]); 
+    }
+    
 }

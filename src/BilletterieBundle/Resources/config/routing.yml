@@ -1,7 +1,24 @@
 billetterie_homepage:
     path:     /
     defaults: { _controller: BilletterieBundle:Default:index }
+    methods:  [GET]
+    
+billetterie_homepage_post:
+    path:     /
+    defaults: { _controller: BilletterieBundle:Default:indexPost }    
+    methods:  [POST]
     
 billetterie_billets:
     path:     /billets
     defaults: { _controller: BilletterieBundle:Default:billets }
+    methods:  [GET]
+    
+billetterie_billets_post:
+    path:     /billets
+    defaults: { _controller: BilletterieBundle:Default:billetsPost }
+    methods:  [POST]
+    
+billetterie_payeur:
+    path:     /payeur
+    defaults: { _controller: BilletterieBundle:Default:payeur }
+    methods:  [GET]
