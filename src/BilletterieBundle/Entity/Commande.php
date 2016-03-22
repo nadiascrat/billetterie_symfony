@@ -49,51 +49,14 @@ class Commande
     private $ipClient;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="nom_client", type="string", length=30)
-     */
-    private $nomClient;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="prenom_client", type="string", length=30)
-     */
-    private $prenomClient;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="adresse_client", type="string", length=100)
-     */
-    private $adresseClient;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="adresse2_client", type="string", length=100)
-     */
-    private $adresse2Client;
-    
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="cp_client", type="integer", length=5)
-     */
-    private $cpClient;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ville_client", type="string", length=50)
-     */
-    private $villeClient;
-
-    /**
      * @ORM\OneToMany(targetEntity="BilletterieBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
      */
     protected $billets;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="BilletterieBundle\Entity\Paiement", cascade={"persist"})
+     */
+    protected $paiement;
   
   
     public function __construct()
@@ -231,76 +194,14 @@ class Commande
         return $this->ipClient;
     }
     
-    public function setNomClient($nomClient)
+    public function setPaiement(Paiement $paiement = null)
     {
-        $this->nomClient = $nomClient;
-
-        return $this;
+      $this->paiement = $paiement;
     }
-
-    public function getNomClient()
+  
+    public function getPaiement()
     {
-        return $this->nomClient;
-    }
-    
-    public function setPrenomClient($prenomClient)
-    {
-        $this->prenomClient = $prenomClient;
-
-        return $this;
-    }
-
-    public function getPrenomClient()
-    {
-        return $this->prenomClient;
-    }
-    
-    public function setAdresseClient($adresseClient)
-    {
-        $this->adresseClient = $adresseClient;
-
-        return $this;
-    }
-
-    public function getAdresseClient()
-    {
-        return $this->adresseClient;
-    }
-    
-    public function setAdresse2Client($adresse2Client)
-    {
-        $this->adresse2Client = $adresse2Client;
-
-        return $this;
-    }
-
-    public function getAdresse2Client()
-    {
-        return $this->adresse2Client;
-    }
-    
-    public function setCpClient($cpClient)
-    {
-        $this->cpClient = $cpClient;
-
-        return $this;
-    }
-
-    public function getCpClient()
-    {
-        return $this->cpClient;
-    }
-    
-    public function setVilleClient($villeClient)
-    {
-        $this->villeClient = $villeClient;
-
-        return $this;
-    }
-
-    public function getVilleClient()
-    {
-        return $this->villeClient;
+      return $this->paiement;
     }
     
     public function getName()
