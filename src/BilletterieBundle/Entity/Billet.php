@@ -19,6 +19,12 @@ class Billet
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   private $id;
+  
+  /**
+   * @ORM\ManyToOne(targetEntity="BilletterieBundle\Entity\Commande", inversedBy="billets")
+   * @ORM\JoinColumn(name="id_commande", referencedColumnName="id")
+   */
+  protected $commande;
 
   /**
    * @ORM\Column(name="nom", type="string", length=255)

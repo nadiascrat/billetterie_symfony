@@ -50,7 +50,7 @@ class Commande
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="BilletterieBundle\Entity\Billet", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="BilletterieBundle\Entity\Billet", mappedBy="commande")
      */
     protected $billets;
   

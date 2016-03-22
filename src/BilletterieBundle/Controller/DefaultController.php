@@ -34,9 +34,9 @@ class DefaultController extends Controller
       
       // On ajoute les champs de l'entité que l'on veut à notre formulaire
       $formBuilder
-        ->add('dateVisite', DateType::class, array(
+        ->add('dateVisite', DateType::class, [
                   'widget' => 'single_text',
-              ))
+              ])
         ->add('journeeEntiere')
         ->add('save', SubmitType::class)
       ;
@@ -73,10 +73,10 @@ class DefaultController extends Controller
       }       
 
       // par défaut, on envoie sur la page d'accueil
-      return $this->render('BilletterieBundle:Default:index.html.twig', array(
+      return $this->render('BilletterieBundle:Default:index.html.twig', [
           'commande' => $commande,
           'formCommande' => $form->createView(),
-          ));   
+          ]);   
     }
     
     public function billetsAction(Request $request)
@@ -105,20 +105,20 @@ class DefaultController extends Controller
           
       // On crée le FormBuilder grâce au service form factory
       $formBuilder = $this->createFormBuilder($commande)
-           ->add('billets', CollectionType::class, array(
+           ->add('billets', CollectionType::class, [
               'entry_type' => BilletType::class,
               'allow_add'    => true,
               'allow_delete' => true,
-            ))
+            ])
       ;    
       
       // À partir du formBuilder, on génère le formulaire
       $form = $formBuilder->getForm();
       
       // par défaut, on envoie sur la page des billets
-      return $this->render('BilletterieBundle:Default:billets.html.twig', array(
+      return $this->render('BilletterieBundle:Default:billets.html.twig', [
           'commande' => $commande,
           'form' => $form->createView(),
-          )); 
+          ]); 
     }
 }
