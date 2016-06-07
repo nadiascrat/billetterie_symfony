@@ -45,3 +45,32 @@ footer {
 	font-size: x-small;
 	text-align: center;
 }
+
+.billet {
+	border: 2px solid #428bca;
+	border-radius: 10px;
+	box-shadow: 2px 2px 5px silver;
+	margin-bottom:15px;
+	overflow:hidden;
+}
+
+.billet h3 {
+	background-color:#428bca;
+	font-size:medium;
+	font-weight:bold;
+	margin:0px;
+	padding:0px;
+	color:#fff;
+	width:120%;
+	margin-left:-30px;
+}
+
+.billet div div {
+	width:25%;
+	display:inline-block;
+}
+
+.billet div div label {
+	font-size:small;
+	display:block;
+}
