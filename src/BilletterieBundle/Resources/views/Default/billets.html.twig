@@ -9,27 +9,32 @@
 {% block body %}
   <div class="row" >
     <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
-      <div class="text-center col-sm-12" >
+      <div class="col-sm-12" >
         <h2>Bénéficiaires des billets</h2>
           <p>Veuillez préciser l'identité des participants à la visite prévue le {{ commande.dateVisite|date('d/m/Y') }}.
           {{ form_start(form) }}
-            <div id="billets" class="billets" data-prototype="{{ form_widget(form.billets.vars.prototype)|e }}" >
+            <div id="billets" class="billets text-left" data-prototype="{{ form_widget(form.billets.vars.prototype)|e }}" >
               {% for billet in form.billets %}
                 <div class="billet col-sm-12">
                   {{ form_row(billet) }}
                 </div>    
               {% endfor %}
             </div>
-            <div class="text-left col-sm-6">
-              {# ajout manuel du bouton pour ajouter un nouveau billet #}
-              <a class="btn btn-primary" href="#" id="btn_ajouter_billet" ><i class="fa fa-plus" ></i> Ajouter un billet</a>
+            <div class="col-sm-12" >
+                <div class="text-left col-sm-6">
+                  {# ajout manuel du bouton pour ajouter un nouveau billet #}
+                  <a class="btn btn-primary" href="#" id="btn_ajouter_billet" ><i class="fa fa-plus" ></i> Ajouter un billet</a>
+                </div>
+                <div class="text-right col-sm-6">
+                  {# ajout manuel du bouton pour supprimer le dernier billet #}
+                  <a class="btn btn-danger" href="#" id="btn_supprimer_billet" ><i class="fa fa-trash" ></i> Supprimer un billet</a>
+                </div>
+                <br /><br />      
             </div>
-            <div class="text-right col-sm-6">
-              {# ajout manuel du bouton pour supprimer le dernier billet #}
-              <a class="btn btn-danger" href="#" id="btn_supprimer_billet" ><i class="fa fa-trash" ></i> Supprimer un billet</a>
+            <div class="text-center col-sm-12">
+              {# ajout manuel du bouton pour valider le formulaire #}              
+              <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
             </div>
-            {# ajout manuel du bouton pour valider le formulaire #}              
-            <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
           </form>
       </div>
     </div>
@@ -87,6 +92,14 @@
             var numBillet = index + 1;
             var $newFormBillet = $('<div class="billet col-sm-12"><h3>Billet n°'+numBillet+'</h3></div>').append(newForm);
             $collectionHolder.append($newFormBillet);
+            
+            // ajoute une classe Bootstrap à certains div de .billet pour améliorer la présentation
+            $('.billet div div').addClass("form-group col-md-4 col-sm-12");
+            $('.dateNaissance').parent().removeClass("col-md-4 col-sm-12");
+            $('.tarifSpecial').parent().removeClass("col-md-4 col-sm-12");
+            $('.tarifSpecial').parent().addClass("col-md-7 blocTarifSpecial");
+            
+            
         }
         
         // La fonction qui supprime le dernier billet
@@ -95,11 +108,15 @@
             // récupère l'index en cours
             var index = $collectionHolder.data('index');
             
-            // supprime le formulaire du dernier div de class "billet"
-            $('div.billet:last-child').remove();
-            
-            // décrémente l'index pour le prochain ajout
-            $collectionHolder.data('index', index - 1);
+            if(index !== 1) {            
+              // supprime le formulaire du dernier div de class "billet"
+              $('div.billet:last-child').remove();
+              
+              // décrémente l'index pour le prochain ajout
+              $collectionHolder.data('index', index - 1);
+            } else {
+              alert("Impossible de supprimer ce billet car votre commande doit comporter au moins un billet.");
+            }
       
         }  
     });

@@ -46,6 +46,11 @@ class Billet
    */
   private $dateNaissance;
   
+  /**
+   * @ORM\Column(name="tarif_special", type="boolean")
+   */
+  private $tarifSpecial;
+  
   public function __construct()
   {
     $this->nationalite = "France";
@@ -99,5 +104,17 @@ class Billet
   public function getdateNaissance()
   {
     return $this->dateNaissance;
+  }
+      
+  public function setTarifSpecial($tarifSpecial)
+  {
+    $this->tarifSpecial = $tarifSpecial;
+
+    return $this;
+  }
+
+  public function getTarifSpecial()
+  {
+    return $this->tarifSpecial;
   }
 }

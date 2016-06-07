@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class BilletType extends AbstractType
 {
@@ -26,7 +27,17 @@ class BilletType extends AbstractType
             ->add('dateNaissance', BirthdayType::class, [
                   'format' => 'dd MMM yyyy',
                   'widget' => 'choice',
+                  'attr' => array(
+                      'class' => 'dateNaissance'
+                  )
               ])
+            ->add('tarifSpecial', CheckboxType::class, array(
+                      'label'    => "Cochez la case suivante pour bénéficier du tarif spécial (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire) ",
+                      'required' => false,
+                      'attr' => array(
+                      'class' => 'tarifSpecial'
+                  )
+                  ));
         ;
     }
     
