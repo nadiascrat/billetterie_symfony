@@ -137,6 +137,7 @@ class DefaultController extends Controller
     {
       // On crée un objet Commande
       $commande = new Commande();
+      $billet = new Billet();
       // On récupère l'EntityManager
       $em = $this->getDoctrine()->getManager();
   
@@ -258,5 +259,43 @@ class DefaultController extends Controller
         return $this->redirect($this->generateUrl('billetterie_paiement'));                   
       }          
     }
-    
+
+
+    public function paiementAction(Request $request)
+    {
+      $commande = new Commande();
+      
+      // On récupère l'EntityManager
+      $em = $this->getDoctrine()->getManager();
+  
+      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
+      $commande = $em->createQueryBuilder()
+        ->select('e')
+        ->from('BilletterieBundle:Commande', 'e')
+        ->orderBy('e.id', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+        
+      // On vérifie que la commande existe bien
+      if ($commande === null) {
+        throw $this->createNotFoundException("Pas de commande en cours.");
+        // on pourrait aussi rediriger automatiquement vers l'accueil
+      }
+          
+      // On crée le FormBuilder grâce au service form factory
+      $formBuilder = $this->createFormBuilder($commande)
+         ->add('paiement', PaiementType::class)
+          ->add('save', SubmitType::class)
+      ;    
+      
+      // À partir du formBuilder, on génère le formulaire
+      $form = $formBuilder->getForm();
+      
+      // par défaut, on envoie sur la page des billets
+      return $this->render('BilletterieBundle:Default:payeur.html.twig', [
+          'commande' => $commande,
+          'form' => $form->createView(),
+          ]); 
+    }    
 }

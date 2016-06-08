@@ -21,7 +21,7 @@ class Billet
   private $id;
   
   /**
-   * @ORM\ManyToOne(targetEntity="BilletterieBundle\Entity\Commande", inversedBy="billets")
+   * @ORM\ManyToOne(targetEntity="BilletterieBundle\Entity\Commande", inversedBy="billets", cascade={"persist", "merge"})
    * @ORM\JoinColumn(name="id_commande", referencedColumnName="id")
    */
   protected $commande;
@@ -117,4 +117,28 @@ class Billet
   {
     return $this->tarifSpecial;
   }
+
+    /**
+     * Set commande
+     *
+     * @param \BilletterieBundle\Entity\Commande $commande
+     *
+     * @return Billet
+     */
+    public function setCommande(\BilletterieBundle\Entity\Commande $commande)
+    {
+        $this->commande = $commande;
+        throw $this->createNotFoundException("AddBillet");  
+        return $this;
+    }
+
+    /**
+     * Get commande
+     *
+     * @return \BilletterieBundle\Entity\Commande
+     */
+    public function getCommande()
+    {
+        return $this->commande;
+    }
 }

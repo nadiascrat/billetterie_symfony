@@ -27,3 +27,8 @@ billetterie_payeur_post:
     path:     /payeur
     defaults: { _controller: BilletterieBundle:Default:payeurPost }
     methods:  [POST]
+    
+billetterie_paiement:
+    path:     /paiement
+    defaults: { _controller: BilletterieBundle:Default:paiement }
+    methods:  [GET]

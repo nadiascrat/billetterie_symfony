@@ -71,7 +71,9 @@ class Commande
     public function addBillet(Billet $billet)
     {
       // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-      $this->billets[] = $billet;  
+      $this->billets[] = $billet;
+      // On lie le billet à la commande
+      $billet->setCommande($this);
       return $this;
     }
   
@@ -211,4 +213,3 @@ class Commande
     
 
 }
-

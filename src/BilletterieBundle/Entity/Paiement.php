@@ -138,4 +138,14 @@ class Paiement
     {
         return $this->villeClient;
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }
