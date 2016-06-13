@@ -15,6 +15,8 @@
           <p><a href="#detailTarifs">Voir le détail des tarifs.</a></p>
           <form name="form" method="post">
             <div id="billets" class="billets text-left" data-prototype="
+              
+              {# prototype des billets #}
               <div id=&quot;form_billets___name__&quot;>
                 <div class=&quot;col-md-12&quot;>
                   <div class=&quot;form-group col-md-4&quot;>
@@ -52,6 +54,8 @@
                       Cochez la case pour bénéficier du tarif spécial
                       </label>
                   </div>
+                  
+                  
                 </div>
               </div>" >
 
@@ -145,8 +149,22 @@
             var $newFormBillet = $('<div class="billet col-sm-12"></div>').append(newForm);
             $collectionHolder.append($newFormBillet);
             
+            // ajoute un bouton de suppression au billet créé
+            addBilletFormDeleteLink($newFormBillet);
             
-            
+        }
+        
+        // fonction qui ajoute un lien de suppression à un billet
+        function addBilletFormDeleteLink($newFormBillet) {
+            var $removeFormA = $('<a class="btn btn-danger" href="#" id="btn_supprimer_billet" ><i class="fa fa-trash" ></i> supprimer ce billet</a>');
+            $newFormBillet.append($removeFormA);
+        
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                // supprime le billet
+                $newFormBillet.remove();
+            });
         }
         
         // La fonction qui supprime le dernier billet
