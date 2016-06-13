@@ -41,12 +41,6 @@ class Commande
      */
     private $journeeEntiere;
         
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ip_client", type="string", length=16)
-     */
-    private $ipClient;
 
     /**
      * @ORM\OneToMany(targetEntity="BilletterieBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
@@ -61,19 +55,17 @@ class Commande
   
     public function __construct()
     {
-      $this->ipClient = $_SERVER['REMOTE_ADDR']; 
       $this->dateVisite   = new \Datetime(); /* date du jour par défaut */
       $this->journeeEntiere   = true; /* billet journée par défaut */
       $this->billets = new ArrayCollection();
     }
 
     // Notez le singulier, on ajoute un seul billet à la fois
-    public function addBillet(Billet $billet)
+    public function addBillet(Billet $billets)
     {
       // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-      $this->billets[] = $billet;
-      // On lie le billet à la commande
-      $billet->setCommande($this);
+      $this->billets[] = $billets;
+      $billets->setCommande($this);
       return $this;
     }
   
@@ -101,27 +93,16 @@ class Commande
     }
 
     /**
-     * Set idCommande
+     * Set id
      *
-     * @param integer $idCommande
+     * @param integer $id
      *
      * @return Commande
      */
-    public function setIdCommande($idCommande)
+    public function setId($idCommande)
     {
-        $this->idCommande = $idCommande;
-
+        $this->id = $idCommande;
         return $this;
-    }
-
-    /**
-     * Get idCommande
-     *
-     * @return int
-     */
-    public function getIdCommande()
-    {
-        return $this->idCommande;
     }
 
     /**
@@ -172,29 +153,6 @@ class Commande
         return $this->journeeEntiere;
     }
     
-    /**
-     * Set ipClient
-     *
-     * @param string $ipClient
-     *
-     * @return Commande
-     */
-    public function setIpClient($ipClient)
-    {
-        $this->ipClient = $ipClient;
-
-        return $this;
-    }
-
-    /**
-     * Get ipClient
-     *
-     * @return string
-     */
-    public function getIpClient()
-    {
-        return $this->ipClient;
-    }
     
     public function setPaiement(Paiement $paiement = null)
     {

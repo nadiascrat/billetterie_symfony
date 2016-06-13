@@ -26,10 +26,10 @@ class DefaultController extends Controller
 {
     public function indexAction(Request $request)
     {
+       
       // On crée un objet Commande
       $commande = new Commande();
   
-      
       // On crée le FormBuilder grâce au service form factory
       $formBuilder = $this->createFormBuilder($commande);
 
@@ -57,9 +57,12 @@ class DefaultController extends Controller
     
     public function indexPostAction(Request $request)
     {
-      // On crée un objet Commande
-      $commande = new Commande();
- 
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
+        
       $formBuilder = $this->createFormBuilder($commande);
       // On ajoute les champs de l'entité que l'on veut à notre formulaire
       $formBuilder
@@ -86,6 +89,10 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();   
         $em->persist($commande);   
         $em->flush();   
+
+        // je mémorise l'identifiant de commande dans la session
+        $session = $request->getSession();
+        $session->set('id_commande', $commande->getId());
             
         // on redirige vers la page de configuration des billets
         return $this->redirect($this->generateUrl('billetterie_billets'));                   
@@ -94,19 +101,12 @@ class DefaultController extends Controller
        
     public function billetsAction(Request $request)
     {
-      $commande = new Commande();
       
-      // On récupère l'EntityManager
-      $em = $this->getDoctrine()->getManager();
-  
-      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
-      $commande = $em->createQueryBuilder()
-        ->select('e')
-        ->from('BilletterieBundle:Commande', 'e')
-        ->orderBy('e.id', 'DESC')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getOneOrNullResult();
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
         
       // On vérifie que la commande existe bien
       if ($commande === null) {
@@ -135,28 +135,20 @@ class DefaultController extends Controller
     
     public function billetsPostAction(Request $request)
     {
-      // On crée un objet Commande
-      $commande = new Commande();
-      $billet = new Billet();
-      // On récupère l'EntityManager
-      $em = $this->getDoctrine()->getManager();
-  
-      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
-      $commande = $em->createQueryBuilder()
-        ->select('e')
-        ->from('BilletterieBundle:Commande', 'e')
-        ->orderBy('e.id', 'DESC')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getOneOrNullResult();
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
         
       $formBuilder = $this->createFormBuilder($commande)
            ->add('billets', CollectionType::class, [
               'entry_type' => BilletType::class,
               'allow_add'    => true,
               'allow_delete' => true,
+              'by_reference' => false,
             ])
-      ; 
+      ;
       $form = $formBuilder->getForm();
       $form->handleRequest($request);
         
@@ -182,19 +174,11 @@ class DefaultController extends Controller
     
     public function payeurAction(Request $request)
     {
-      $commande = new Commande();
-      
-      // On récupère l'EntityManager
-      $em = $this->getDoctrine()->getManager();
-  
-      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
-      $commande = $em->createQueryBuilder()
-        ->select('e')
-        ->from('BilletterieBundle:Commande', 'e')
-        ->orderBy('e.id', 'DESC')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getOneOrNullResult();
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
         
       // On vérifie que la commande existe bien
       if ($commande === null) {
@@ -220,19 +204,11 @@ class DefaultController extends Controller
     
     public function payeurPostAction(Request $request)
     {
-      // On crée un objet Commande
-      $commande = new Commande();
-      // On récupère l'EntityManager
-      $em = $this->getDoctrine()->getManager();
-  
-      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
-      $commande = $em->createQueryBuilder()
-        ->select('e')
-        ->from('BilletterieBundle:Commande', 'e')
-        ->orderBy('e.id', 'DESC')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getOneOrNullResult();
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
         
       $formBuilder = $this->createFormBuilder($commande)
         ->add('paiement', PaiementType::class)
@@ -263,19 +239,11 @@ class DefaultController extends Controller
 
     public function paiementAction(Request $request)
     {
-      $commande = new Commande();
-      
-      // On récupère l'EntityManager
-      $em = $this->getDoctrine()->getManager();
-  
-      // On récupére la commande en cours avec findBy(), en se basant sur l'IP
-      $commande = $em->createQueryBuilder()
-        ->select('e')
-        ->from('BilletterieBundle:Commande', 'e')
-        ->orderBy('e.id', 'DESC')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getOneOrNullResult();
+      // On récupére la commande en cours avec find()
+      $session = $request->getSession();
+      $commande = $this->getDoctrine()
+        ->getRepository('BilletterieBundle:Commande')
+        ->find($session->get('id_commande'));
         
       // On vérifie que la commande existe bien
       if ($commande === null) {

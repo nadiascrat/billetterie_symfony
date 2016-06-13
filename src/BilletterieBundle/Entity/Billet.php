@@ -22,7 +22,7 @@ class Billet
   
   /**
    * @ORM\ManyToOne(targetEntity="BilletterieBundle\Entity\Commande", inversedBy="billets", cascade={"persist", "merge"})
-   * @ORM\JoinColumn(name="id_commande", referencedColumnName="id")
+   * @ORM\JoinColumn(nullable=false)
    */
   protected $commande;
 
@@ -128,7 +128,6 @@ class Billet
     public function setCommande(\BilletterieBundle\Entity\Commande $commande)
     {
         $this->commande = $commande;
-        throw $this->createNotFoundException("AddBillet");  
         return $this;
     }
 
