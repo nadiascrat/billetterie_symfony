@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Forms;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -29,7 +30,7 @@ class DefaultController extends Controller
        
       // On crée un objet Commande
       $commande = new Commande();
-  
+         
       // On crée le FormBuilder grâce au service form factory
       $formBuilder = $this->createFormBuilder($commande);
 
@@ -135,12 +136,21 @@ class DefaultController extends Controller
     
     public function billetsPostAction(Request $request)
     {
+      $em = $this->getDoctrine()->getManager();   
+      
       // On récupére la commande en cours avec find()
-      $session = $request->getSession();
+      $session = $request->getSession();  
       $commande = $this->getDoctrine()
         ->getRepository('BilletterieBundle:Commande')
         ->find($session->get('id_commande'));
-        
+      
+      // on mémorise les billets initialement demandés
+      $originalBillets = new ArrayCollection();
+      foreach ($commande->getBillets() as $billet) {
+        $originalBillets->add($billet);
+      }
+      
+      // le by_reference a résolu le pb de l'ajout de l'ID de la commande   
       $formBuilder = $this->createFormBuilder($commande)
            ->add('billets', CollectionType::class, [
               'entry_type' => BilletType::class,
@@ -151,7 +161,16 @@ class DefaultController extends Controller
       ;
       $form = $formBuilder->getForm();
       $form->handleRequest($request);
-        
+      
+        // suppression des billets supprimés manuellement par l'internaute
+        foreach ($originalBillets as $billet) {
+              if (false === $commande->getBillets()->contains($billet)) {
+                  //die("il manque le billet n°".$billet->getId());
+                  $commande->getBillets()->removeElement($billet);
+                  $em->remove($billet);
+              }      
+        }
+                 
       // On récupère le service validator
       $validator = $this->get('validator');
       
@@ -162,6 +181,7 @@ class DefaultController extends Controller
       if(count($listErrors) > 0) {
         return new Response(print_r($listErrors, true));
       } else {
+        
         // on persiste
         $em = $this->getDoctrine()->getManager();   
         $em->persist($commande);   

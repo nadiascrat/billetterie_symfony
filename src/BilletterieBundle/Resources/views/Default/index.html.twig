@@ -23,8 +23,8 @@
           <br />
           <form method="POST" >
             {{form_widget(formCommande._token)}}
-            <input type="hidden" id="form_journeeEntiere" name="form[journeeEntiere]" required="required" value="{{ commande.journeeEntiere }}" />
-            <input type="hidden" id="form_dateVisite" name="form[dateVisite]" value="{{ commande.dateVisite|date('Y-m-d') }}" />
+            <input type="text" id="form_journeeEntiere" name="form[journeeEntiere]" required="required" value="{{ commande.journeeEntiere }}" />
+            <input type="text" id="form_dateVisite" name="form[dateVisite]" value="{{ commande.dateVisite|date('Y-m-d') }}" />
             <button type="submit" class="btn btn-lg btn-primary" ><i class="fa fa-sign-in" ></i> Etape suivante</button>
           </form>
         </div>
