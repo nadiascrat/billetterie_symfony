@@ -157,65 +157,11 @@
             });
         }
         
-        // La fonction qui supprime le dernier billet
-        function deleteBilletForm($collectionHolder) {
-            
-            // récupère l'index en cours
-            var index = $collectionHolder.data('index');
-            
-            if(index !== 1) {            
-              // supprime le formulaire du dernier div de class "billet"
-              $('div.billet:last-child').remove();
-              
-              // décrémente l'index pour le prochain ajout
-              $collectionHolder.data('index', index - 1);
-            } else {
-              alert("Impossible de supprimer ce billet car votre commande doit comporter au moins un billet.");
-            }
-      
-        }  
+        
     });
   </script>
   
   
 {% endblock %}
 
-{#
-<div id="billets" class="billets text-left" data-prototype="
-<div id=&quot;form_billets___name__&quot;>
-  <div class="form-group col-md-3">
-    <label for=&quot;form_billets___name___nom&quot; class=&quot;required&quot;>Nom</label>
-    <input type=&quot;text&quot; id=&quot;form_billets___name___nom&quot; name=&quot;form[billets][__name__][nom]&quot; required=&quot;required&quot; />
-  </div>
-  <div class="form-group col-md-3">
-    <label for=&quot;form_billets___name___prenom&quot; class=&quot;required&quot;>Prenom</label>
-    <input type=&quot;text&quot; id=&quot;form_billets___name___prenom&quot; name=&quot;form[billets][__name__][prenom]&quot; required=&quot;required&quot; />
-  </div>
-  <div class="form-group col-md-3">
-    <label for=&quot;form_billets___name___nationalite&quot; class=&quot;required&quot;>Nationalite</label>
-    <select id=&quot;form_billets___name___nationalite&quot; name=&quot;form[billets][__name__][nationalite]&quot;>
-                <option value=&quot;France&quot; >France</option>
-                <option value=&quot;Afrique&quot; >Afrique</option>
-                <option value=&quot;Amérique du Nord&quot; >Amérique du Nord</option>
-                <option value=&quot;Amérique du Sud&quot; >Amérique du Sud</option>
-                <option value=&quot;Asie&quot; >Asie</option>
-                <option value=&quot;Europe&quot; >Europe (hors France)</option>
-                <option value=&quot;Eurasie&quot; >Eurasie</option>
-    </select>
-  </div>
-  <div class="form-group col-md-3">
-    <label class=&quot;required&quot;>Date naissance</label>
-    <select id=&quot;form_billets___name___dateNaissance_day&quot; name=&quot;form[billets][__name__][dateNaissance][day]&quot;>
-                <option value=&quot;1&quot; >01</option>            <option value=&quot;2&quot; >02</option>            <option value=&quot;3&quot; >03</option>            <option value=&quot;4&quot; >04</option>            <option value=&quot;5&quot; >05</option>            <option value=&quot;6&quot; >06</option>            <option value=&quot;7&quot; >07</option>            <option value=&quot;8&quot; >08</option>            <option value=&quot;9&quot; >09</option>            <option value=&quot;10&quot; >10</option>            <option value=&quot;11&quot; >11</option>            <option value=&quot;12&quot; >12</option>            <option value=&quot;13&quot; >13</option>            <option value=&quot;14&quot; >14</option>            <option value=&quot;15&quot; >15</option>            <option value=&quot;16&quot; >16</option>            <option value=&quot;17&quot; >17</option>            <option value=&quot;18&quot; >18</option>            <option value=&quot;19&quot; >19</option>            <option value=&quot;20&quot; >20</option>            <option value=&quot;21&quot; >21</option>            <option value=&quot;22&quot; >22</option>            <option value=&quot;23&quot; >23</option>            <option value=&quot;24&quot; >24</option>            <option value=&quot;25&quot; >25</option>            <option value=&quot;26&quot; >26</option>            <option value=&quot;27&quot; >27</option>            <option value=&quot;28&quot; >28</option>            <option value=&quot;29&quot; >29</option>            <option value=&quot;30&quot; >30</option>            <option value=&quot;31&quot; >31</option></select> <select id=&quot;form_billets___name___dateNaissance_month&quot; name=&quot;form[billets][__name__][dateNaissance][month]&quot;>            <option value=&quot;1&quot; >Jan</option>            <option value=&quot;2&quot; >Feb</option>            <option value=&quot;3&quot; >Mar</option>            <option value=&quot;4&quot; >Apr</option>            <option value=&quot;5&quot; >May</option>            <option value=&quot;6&quot; >Jun</option>            <option value=&quot;7&quot; >Jul</option>            <option value=&quot;8&quot; >Aug</option>            <option value=&quot;9&quot; >Sep</option>            <option value=&quot;10&quot; >Oct</option>            <option value=&quot;11&quot; >Nov</option>            <option value=&quot;12&quot; >Dec</option></select> <select id=&quot;form_billets___name___dateNaissance_year&quot; name=&quot;form[billets][__name__][dateNaissance][year]&quot;>            <option value=&quot;1902&quot; >1902</option>            <option value=&quot;1903&quot; >1903</option>            <option value=&quot;1904&quot; >1904</option>            <option value=&quot;1905&quot; >1905</option>            <option value=&quot;1906&quot; >1906</option>            <option value=&quot;1907&quot; >1907</option>            <option value=&quot;1908&quot; >1908</option>            <option value=&quot;1909&quot; >1909</option>            <option value=&quot;1910&quot; >1910</option>            <option value=&quot;1911&quot; >1911</option>            <option value=&quot;1912&quot; >1912</option>            <option value=&quot;1913&quot; >1913</option>            <option value=&quot;1914&quot; >1914</option>            <option value=&quot;1915&quot; >1915</option>            <option value=&quot;1916&quot; >1916</option>            <option value=&quot;1917&quot; >1917</option>            <option value=&quot;1918&quot; >1918</option>            <option value=&quot;1919&quot; >1919</option>            <option value=&quot;1920&quot; >1920</option>            <option value=&quot;1921&quot; >1921</option>            <option value=&quot;1922&quot; >1922</option>            <option value=&quot;1923&quot; >1923</option>            <option value=&quot;1924&quot; >1924</option>            <option value=&quot;1925&quot; >1925</option>            <option value=&quot;1926&quot; >1926</option>            <option value=&quot;1927&quot; >1927</option>            <option value=&quot;1928&quot; >1928</option>            <option value=&quot;1929&quot; >1929</option>            <option value=&quot;1930&quot; >1930</option>            <option value=&quot;1931&quot; >1931</option>            <option value=&quot;1932&quot; >1932</option>            <option value=&quot;1933&quot; >1933</option>            <option value=&quot;1934&quot; >1934</option>            <option value=&quot;1935&quot; >1935</option>            <option value=&quot;1936&quot; >1936</option>            <option value=&quot;1937&quot; >1937</option>            <option value=&quot;1938&quot; >1938</option>            <option value=&quot;1939&quot; >1939</option>            <option value=&quot;1940&quot; >1940</option>            <option value=&quot;1941&quot; >1941</option>            <option value=&quot;1942&quot; >1942</option>            <option value=&quot;1943&quot; >1943</option>            <option value=&quot;1944&quot; >1944</option>            <option value=&quot;1945&quot; >1945</option>            <option value=&quot;1946&quot; >1946</option>            <option value=&quot;1947&quot; >1947</option>            <option value=&quot;1948&quot; >1948</option>            <option value=&quot;1949&quot; >1949</option>            <option value=&quot;1950&quot; >1950</option>            <option value=&quot;1951&quot; >1951</option>            <option value=&quot;1952&quot; >1952</option>            <option value=&quot;1953&quot; >1953</option>            <option value=&quot;1954&quot; >1954</option>            <option value=&quot;1955&quot; >1955</option>            <option value=&quot;1956&quot; >1956</option>            <option value=&quot;1957&quot; >1957</option>            <option value=&quot;1958&quot; >1958</option>            <option value=&quot;1959&quot; >1959</option>            <option value=&quot;1960&quot; >1960</option>            <option value=&quot;1961&quot; >1961</option>            <option value=&quot;1962&quot; >1962</option>            <option value=&quot;1963&quot; >1963</option>            <option value=&quot;1964&quot; >1964</option>            <option value=&quot;1965&quot; >1965</option>            <option value=&quot;1966&quot; >1966</option>            <option value=&quot;1967&quot; >1967</option>            <option value=&quot;1968&quot; >1968</option>            <option value=&quot;1969&quot; >1969</option>            <option value=&quot;1970&quot; >1970</option>            <option value=&quot;1971&quot; >1971</option>            <option value=&quot;1972&quot; >1972</option>            <option value=&quot;1973&quot; >1973</option>            <option value=&quot;1974&quot; >1974</option>            <option value=&quot;1975&quot; >1975</option>            <option value=&quot;1976&quot; >1976</option>            <option value=&quot;1977&quot; >1977</option>            <option value=&quot;1978&quot; >1978</option>            <option value=&quot;1979&quot; >1979</option>            <option value=&quot;1980&quot; >1980</option>            <option value=&quot;1981&quot; >1981</option>            <option value=&quot;1982&quot; >1982</option>            <option value=&quot;1983&quot; >1983</option>            <option value=&quot;1984&quot; >1984</option>            <option value=&quot;1985&quot; >1985</option>            <option value=&quot;1986&quot; >1986</option>            <option value=&quot;1987&quot; >1987</option>            <option value=&quot;1988&quot; >1988</option>            <option value=&quot;1989&quot; >1989</option>            <option value=&quot;1990&quot; >1990</option>            <option value=&quot;1991&quot; >1991</option>            <option value=&quot;1992&quot; >1992</option>            <option value=&quot;1993&quot; >1993</option>            <option value=&quot;1994&quot; >1994</option>            <option value=&quot;1995&quot; >1995</option>            <option value=&quot;1996&quot; >1996</option>            <option value=&quot;1997&quot; >1997</option>            <option value=&quot;1998&quot; >1998</option>            <option value=&quot;1999&quot; >1999</option>            <option value=&quot;2000&quot; >2000</option>            <option value=&quot;2001&quot; >2001</option>            <option value=&quot;2002&quot; >2002</option>            <option value=&quot;2003&quot; >2003</option>            <option value=&quot;2004&quot; >2004</option>            <option value=&quot;2005&quot; >2005</option>            <option value=&quot;2006&quot; >2006</option>            <option value=&quot;2007&quot; >2007</option>            <option value=&quot;2008&quot; >2008</option>            <option value=&quot;2009&quot; >2009</option>            <option value=&quot;2010&quot; >2010</option>            <option value=&quot;2011&quot; >2011</option>            <option value=&quot;2012&quot; >2012</option>            <option value=&quot;2013&quot; >2013</option>            <option value=&quot;2014&quot; >2014</option>            <option value=&quot;2015&quot; >2015</option>            <option value=&quot;2016&quot; >2016</option>
-    </select>
-  </div>
-  <div class="form-group col-md-12">
-    <input type=&quot;checkbox&quot; id=&quot;form_billets___name___tarifSpecial&quot; name=&quot;form[billets][__name__][tarifSpecial]&quot; class=&quot;tarifSpecial&quot; value=&quot;1&quot; />
-    <label for=&quot;form_billets___name___tarifSpecial&quot;>Cochez la case suivante pour bénéficier du tarif spécial (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire) </label>
-  </div>
-</div>">
-
-data-prototype=" form_widget(form.billets.vars.prototype)|e 
-
-#}
 

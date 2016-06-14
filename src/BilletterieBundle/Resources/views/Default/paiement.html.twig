@@ -1,0 +1,23 @@
+{# src/BilletterieBundle/Resources/views/Default/index.html.twig #}
+
+{% extends "BilletterieBundle::layout.html.twig" %}
+
+{% block title %}
+  Paiement - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <div class="row" >
+    <div class="text-center col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10" id="reservation" >
+      <div class="text-center col-sm-12 form-horizontal" >
+        <h2>Paiement</h2>
+        <form method="POST"> <p> {{ book.author }}. {{ book.name }}, {{ book.quantity }} items for {{ book.price }}{{ book.currency_symbol }} each. </p> <input type="submit" value="Buy" /> </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

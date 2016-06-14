@@ -31,4 +31,4 @@ billetterie_payeur_post:
 billetterie_paiement:
     path:     /paiement
     defaults: { _controller: BilletterieBundle:Default:paiement }
-    methods:  [GET]
+    methods:  

@@ -58,11 +58,17 @@ class DefaultController extends Controller
     
     public function indexPostAction(Request $request)
     {
-      // On récupére la commande en cours avec find()
+      // soit on initialise une commande
+      // soit on récupére la commande en cours avec find()
       $session = $request->getSession();
-      $commande = $this->getDoctrine()
-        ->getRepository('BilletterieBundle:Commande')
-        ->find($session->get('id_commande'));
+      if(null !== $session->get('id_commande')) {
+        $commande = $this->getDoctrine()
+          ->getRepository('BilletterieBundle:Commande')
+          ->find($session->get('id_commande'));
+      } else {
+        $commande = new Commande();
+      }
+              
         
       $formBuilder = $this->createFormBuilder($commande);
       // On ajoute les champs de l'entité que l'on veut à notre formulaire
@@ -259,31 +265,73 @@ class DefaultController extends Controller
 
     public function paiementAction(Request $request)
     {
-      // On récupére la commande en cours avec find()
-      $session = $request->getSession();
-      $commande = $this->getDoctrine()
-        ->getRepository('BilletterieBundle:Commande')
-        ->find($session->get('id_commande'));
+        /*$gatewayName = 'paypal_express_checkout_via_omnipay';
+
+        $storage = $this->get('payum')->getStorage('BilletterieBundle\Entity\Payment');
+
+        $payment = $storage->create();
+        $payment->setNumber(uniqid());
+        $payment->setCurrencyCode('EUR');
+        $payment->setTotalAmount(123); // 1.23 EUR
+        $payment->setDescription('A description');
+        $payment->setClientId('anId');
+        $payment->setClientEmail('nadia.tronche@gmail.com');
+
+        $storage->update($payment);
+
+        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
+            $gatewayName, 
+            $payment, 
+            'billetterie_billets' // the route to redirect after capture
+        );
+
+        return $this->redirect($captureToken->getTargetUrl());
+        */
         
-      // On vérifie que la commande existe bien
-      if ($commande === null) {
-        throw $this->createNotFoundException("Pas de commande en cours.");
-        // on pourrait aussi rediriger automatiquement vers l'accueil
-      }
-          
-      // On crée le FormBuilder grâce au service form factory
-      $formBuilder = $this->createFormBuilder($commande)
-         ->add('paiement', PaiementType::class)
-          ->add('save', SubmitType::class)
-      ;    
-      
-      // À partir du formBuilder, on génère le formulaire
-      $form = $formBuilder->getForm();
-      
-      // par défaut, on envoie sur la page des billets
-      return $this->render('BilletterieBundle:Default:payeur.html.twig', [
-          'commande' => $commande,
-          'form' => $form->createView(),
-          ]); 
+        $gatewayName = 'paypal_express_checkout_and_doctrine_orm';
+
+        $eBook = array(
+            'author' => 'Jules Verne',
+            'name' => 'The Mysterious Island',
+            'description' => 'The Mysterious Island is a novel by Jules Verne, published in 1874.',
+            'price' => 2.64,
+            'currency_symbol' => '€',
+            'currency' => 'EUR',
+            'quantity' => 2
+        );
+
+        if ('POST' === $request->getMethod()) {
+            $storage = $this->get('payum')->getStorage(Payment::class);
+
+            /** @var $payment PaymentDetails */
+            $payment = $storage->create();
+            $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = $eBook['currency'];
+            $payment['PAYMENTREQUEST_0_AMT'] = $eBook['price'] * $eBook['quantity'];
+            $payment['NOSHIPPING'] = Api::NOSHIPPING_NOT_DISPLAY_ADDRESS;
+            $payment['REQCONFIRMSHIPPING'] = Api::REQCONFIRMSHIPPING_NOT_REQUIRED;
+            $payment['L_PAYMENTREQUEST_0_ITEMCATEGORY0'] = Api::PAYMENTREQUEST_ITERMCATEGORY_DIGITAL;
+            $payment['L_PAYMENTREQUEST_0_AMT0'] = $eBook['price'];
+            $payment['L_PAYMENTREQUEST_0_QTY0'] = $eBook['quantity'];
+            $payment['L_PAYMENTREQUEST_0_NAME0'] = $eBook['author'].'. '.$eBook['name'];
+            $payment['L_PAYMENTREQUEST_0_DESC0'] = $eBook['description'];
+            $storage->update($payment);
+
+            $captureToken = $this->getPayum()->getTokenFactory()->createCaptureToken(
+                $gatewayName,
+                $payment,
+                'acme_payment_done'
+            );
+
+            $payment['INVNUM'] = $payment->getId();
+            $storage->update($payment);
+
+            return $this->redirect($captureToken->getTargetUrl());
+        }
+                
+        return $this->render('BilletterieBundle:Default:paiement.html.twig', [
+            'book' => $eBook,
+            'gatewayName' => $gatewayName
+        ]);
+ 
     }    
 }
