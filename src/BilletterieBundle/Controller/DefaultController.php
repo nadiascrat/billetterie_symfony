@@ -23,6 +23,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
+use Payum\Core\Model\Payment;
+use Payum\Core\Reply\HttpRedirect;
+use Payum\Core\Reply\HttpResponse;
+use Payum\Core\Request\Capture;
+
 class DefaultController extends Controller
 {
     public function indexAction(Request $request)
@@ -287,51 +292,16 @@ class DefaultController extends Controller
 
         return $this->redirect($captureToken->getTargetUrl());
         */
+        $payment = new Payment;
+        $payment->setNumber(uniqid());
+        $payment->setCurrencyCode('EUR');
+        $payment->setTotalAmount(123); // 1.23 EUR
+        $payment->setDescription('A description');
+        $payment->setClientId('anId');
+        $payment->setClientEmail('foo@example.com');
         
-        $gatewayName = 'paypal_express_checkout_and_doctrine_orm';
+        $gateway = $this->get('payum')->getGateway('offline');
+        $gateway->execute(new Capture($payment));
 
-        $eBook = array(
-            'author' => 'Jules Verne',
-            'name' => 'The Mysterious Island',
-            'description' => 'The Mysterious Island is a novel by Jules Verne, published in 1874.',
-            'price' => 2.64,
-            'currency_symbol' => '€',
-            'currency' => 'EUR',
-            'quantity' => 2
-        );
-
-        if ('POST' === $request->getMethod()) {
-            $storage = $this->get('payum')->getStorage(Payment::class);
-
-            /** @var $payment PaymentDetails */
-            $payment = $storage->create();
-            $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = $eBook['currency'];
-            $payment['PAYMENTREQUEST_0_AMT'] = $eBook['price'] * $eBook['quantity'];
-            $payment['NOSHIPPING'] = Api::NOSHIPPING_NOT_DISPLAY_ADDRESS;
-            $payment['REQCONFIRMSHIPPING'] = Api::REQCONFIRMSHIPPING_NOT_REQUIRED;
-            $payment['L_PAYMENTREQUEST_0_ITEMCATEGORY0'] = Api::PAYMENTREQUEST_ITERMCATEGORY_DIGITAL;
-            $payment['L_PAYMENTREQUEST_0_AMT0'] = $eBook['price'];
-            $payment['L_PAYMENTREQUEST_0_QTY0'] = $eBook['quantity'];
-            $payment['L_PAYMENTREQUEST_0_NAME0'] = $eBook['author'].'. '.$eBook['name'];
-            $payment['L_PAYMENTREQUEST_0_DESC0'] = $eBook['description'];
-            $storage->update($payment);
-
-            $captureToken = $this->getPayum()->getTokenFactory()->createCaptureToken(
-                $gatewayName,
-                $payment,
-                'acme_payment_done'
-            );
-
-            $payment['INVNUM'] = $payment->getId();
-            $storage->update($payment);
-
-            return $this->redirect($captureToken->getTargetUrl());
-        }
-                
-        return $this->render('BilletterieBundle:Default:paiement.html.twig', [
-            'book' => $eBook,
-            'gatewayName' => $gatewayName
-        ]);
- 
     }    
 }

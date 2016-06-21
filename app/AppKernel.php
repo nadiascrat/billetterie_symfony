@@ -5,7 +5,12 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    public function __construct($environment, $debug)
+    {
+        date_default_timezone_set('Europe/Paris');
+        parent::__construct($environment, $debug);
+    }
+        public function registerBundles()
     {
         $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -17,6 +22,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
             new BilletterieBundle\BilletterieBundle(),
+            new Payum\Bundle\PayumBundle\PayumBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

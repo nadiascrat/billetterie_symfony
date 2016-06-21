@@ -5,3 +5,6 @@ billetterie:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+      
+payum_capture:
+    resource: "@PayumBundle/Resources/config/routing/capture.xml"
